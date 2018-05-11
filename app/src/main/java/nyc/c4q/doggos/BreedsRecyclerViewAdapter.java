@@ -1,4 +1,4 @@
-package nyc.c4q.doggos.breeds_list;
+package nyc.c4q.doggos;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import nyc.c4q.doggos.doggos_list.DoggosActivity;
 
 public class BreedsRecyclerViewAdapter
         extends RecyclerView.Adapter<BreedsRecyclerViewAdapter.BreedViewHolder> {

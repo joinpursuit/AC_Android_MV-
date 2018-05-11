@@ -1,8 +1,8 @@
-package nyc.c4q.doggos.breeds_list;
+package nyc.c4q.doggos;
 
 import java.util.List;
 
-public class BreedsListResponse {
+public class ImagesByBreedResponse {
 
     private String status;
     private List<String> message;

@@ -1,4 +1,4 @@
-package nyc.c4q.doggos.doggos_list;
+package nyc.c4q.doggos;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -11,8 +11,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import nyc.c4q.doggos.R;
 
 public class DoggosRecyclerViewAdapter
         extends RecyclerView.Adapter<DoggosRecyclerViewAdapter.DoggoViewHolder> {

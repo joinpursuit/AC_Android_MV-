@@ -1,4 +1,4 @@
-package nyc.c4q.doggos.doggos_list;
+package nyc.c4q.doggos;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,8 +9,6 @@ import android.widget.Toast;
 
 import java.util.List;
 
-import nyc.c4q.doggos.R;
-import nyc.c4q.doggos.breeds_list.DogApiEndpoints;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
