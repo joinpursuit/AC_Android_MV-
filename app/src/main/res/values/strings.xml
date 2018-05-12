@@ -1,6 +1,0 @@
-<resources>
-    <string name="app_name">Doggos</string>
-    <string name="breeds_activity_title">Pick a type of doggo</string>
-    <string name="doggos_activity_title">Look at these %s doggos!</string>
-    <string name="error_msg_no_doggos">Uh oh! Unable to show you doggos :(</string>
-</resources>
