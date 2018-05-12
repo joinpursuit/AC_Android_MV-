@@ -1,8 +1,7 @@
-package nyc.c4q.doggos.breeds_list;
+package nyc.c4q.doggos.data.network;
 
 import android.support.annotation.NonNull;
 
-import nyc.c4q.doggos.doggos_list.ImagesByBreedResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;

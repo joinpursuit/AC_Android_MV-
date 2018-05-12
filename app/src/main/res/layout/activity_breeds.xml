@@ -4,4 +4,4 @@
     android:id="@+id/breed_list_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".breeds_list.BreedsActivity" />
+    tools:context=".ui.BreedsActivity" />
