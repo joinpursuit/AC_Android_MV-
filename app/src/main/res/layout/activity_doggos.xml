@@ -4,4 +4,4 @@
     android:id="@+id/doggos_list_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.DoggosActivity" />
+    tools:context=".ui.doggos.DoggosActivity" />

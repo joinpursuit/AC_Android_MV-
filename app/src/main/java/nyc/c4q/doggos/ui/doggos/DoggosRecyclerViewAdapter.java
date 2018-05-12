@@ -1,4 +1,4 @@
-package nyc.c4q.doggos.ui;
+package nyc.c4q.doggos.ui.doggos;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;

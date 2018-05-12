@@ -1,4 +1,4 @@
-package nyc.c4q.doggos.ui;
+package nyc.c4q.doggos.ui.doggos;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

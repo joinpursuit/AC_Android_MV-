@@ -12,14 +12,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.BreedsActivity">
+        <activity android:name=".ui.breeds.BreedsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.DoggosActivity"></activity>
+        <activity android:name=".ui.doggos.DoggosActivity"></activity>
     </application>
 
 </manifest>
