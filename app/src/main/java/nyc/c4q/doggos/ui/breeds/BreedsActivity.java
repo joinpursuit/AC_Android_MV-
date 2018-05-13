@@ -1,6 +1,7 @@
 package nyc.c4q.doggos.ui.breeds;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +14,11 @@ import nyc.c4q.doggos.data.DoggoManager;
 import nyc.c4q.doggos.data.MyDoggoManager;
 import nyc.c4q.doggos.data.db.DoggoDbHelper;
 
-public class BreedsActivity extends AppCompatActivity {
+public class BreedsActivity extends AppCompatActivity implements BreedsContract.View {
 
     private static final int COLUMN_COUNT = 3;
 
+    private BreedsContract.Presenter presenter;
     private BreedsRecyclerViewAdapter adapter;
 
     @Override
@@ -26,7 +28,28 @@ public class BreedsActivity extends AppCompatActivity {
 
         setTitle();
         setUpRecyclerView();
-        populateRecyclerView();
+
+        DoggoManager doggoManager = new MyDoggoManager(DoggoDbHelper.getInstance(this));
+        presenter = new BreedsPresenter(this, doggoManager);
+
+        // Tell the presenter the view is good to go!
+        presenter.start();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.stop(); // Tell the presenter to stop holding onto a reference to this activity
+    }
+
+    @Override
+    public void displayBreedNames(@NonNull List<String> breedNames) {
+        adapter.refreshBreedList(breedNames);
+    }
+
+    @Override
+    public void displayErrorMessage(@NonNull String errorMessage) {
+        Toast.makeText(BreedsActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     private void setTitle() {
@@ -42,23 +65,5 @@ public class BreedsActivity extends AppCompatActivity {
 
         adapter = new BreedsRecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
-    }
-
-    private void populateRecyclerView() {
-        // Get list of breeds
-        DoggoManager doggoManager = new MyDoggoManager(DoggoDbHelper.getInstance(this));
-
-        doggoManager.getBreedNames(new DoggoManager.BreedNamesCallback() {
-            @Override
-            public void onSuccess(List<String> breedNames) {
-                adapter.refreshBreedList(breedNames);
-            }
-
-            @Override
-            public void onFailure() {
-                Toast.makeText(BreedsActivity.this, R.string.error_msg_no_doggos,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }

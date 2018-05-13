@@ -1,6 +1,7 @@
 package nyc.c4q.doggos.ui.doggos;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -13,11 +14,12 @@ import nyc.c4q.doggos.data.DoggoManager;
 import nyc.c4q.doggos.data.MyDoggoManager;
 import nyc.c4q.doggos.data.db.DoggoDbHelper;
 
-public class DoggosActivity extends AppCompatActivity {
+public class DoggosActivity extends AppCompatActivity implements DoggosContract.View {
 
     public static final String SELECTED_BREED_KEY = "selectedBreedKey";
     private static final int COLUMN_COUNT = 2;
 
+    private DoggosContract.Presenter presenter;
     private String breedName;
     private DoggosRecyclerViewAdapter adapter;
 
@@ -29,7 +31,28 @@ public class DoggosActivity extends AppCompatActivity {
         getSelectedBreedName();
         setTitle();
         setUpRecyclerView();
-        populateRecyclerView();
+
+        DoggoManager doggoManager = new MyDoggoManager(DoggoDbHelper.getInstance(this));
+        presenter = new DoggosPresenter(this, doggoManager);
+
+        // Tell the presenter the view is good to go!
+        presenter.start(breedName);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.stop(); // Tell the presenter to stop holding onto a reference to this activity
+    }
+
+    @Override
+    public void displayDoggos(@NonNull List<String> doggoImageUrls) {
+        adapter.refreshDoggoImages(doggoImageUrls);
+    }
+
+    @Override
+    public void displayErrorMessage(@NonNull String errorMessage) {
+        Toast.makeText(DoggosActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 
     private void getSelectedBreedName() {
@@ -57,24 +80,5 @@ public class DoggosActivity extends AppCompatActivity {
 
         adapter = new DoggosRecyclerViewAdapter();
         recyclerView.setAdapter(adapter);
-    }
-
-    private void populateRecyclerView() {
-        // Get list of doggo image URLs
-        DoggoManager doggoManager = new MyDoggoManager(DoggoDbHelper.getInstance(this));
-
-        doggoManager.getDoggoImageUrlsByBreed(breedName, new DoggoManager.DoggoImageUrlsCallback() {
-            @Override
-            public void onSuccess(List<String> doggoImageUrls) {
-                // Update the recycler view adapter with the list of image URLs
-                adapter.refreshDoggoImages(doggoImageUrls);
-            }
-
-            @Override
-            public void onFailure() {
-                Toast.makeText(DoggosActivity.this, R.string.error_msg_no_doggos,
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }

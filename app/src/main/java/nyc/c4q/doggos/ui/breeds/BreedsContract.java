@@ -8,10 +8,11 @@ interface BreedsContract {
 
     interface View {
         void displayBreedNames(@NonNull List<String> breedNames);
+        void displayErrorMessage(@NonNull String errorMessage);
     }
 
     interface Presenter {
-        void onViewReady(); // Could also reasonably be named loadData() or start()
-        void onBreedSelected();
+        void start(); // sometimes people might name this onViewReady(), or loadData(), etc.
+        void stop();
     }
 }

@@ -68,8 +68,6 @@ public class DoggoDbHelper extends SQLiteOpenHelper {
             contentValues.put(COL_NAME_BREED, name);
             db.insert(TABLE_NAME_BREEDS, null, contentValues);
         }
-
-        db.close();
     }
 
     public List<String> getBreedNames() {
@@ -91,7 +89,6 @@ public class DoggoDbHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
         return names;
     }
 
@@ -108,8 +105,6 @@ public class DoggoDbHelper extends SQLiteOpenHelper {
             contentValues.put(COL_NAME_DOGGO_IMAGE_URL, url);
             db.insert(TABLE_NAME_DOGGOS, null, contentValues);
         }
-
-        db.close();
     }
 
     public List<String> getDoggoImageUrls(String breedName) {
@@ -131,7 +126,6 @@ public class DoggoDbHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        db.close();
         return urls;
     }
 }
