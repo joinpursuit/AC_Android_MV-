@@ -1,7 +1,9 @@
 package nyc.c4q.doggos.ui.doggos;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -14,12 +16,11 @@ import nyc.c4q.doggos.data.DoggoManager;
 import nyc.c4q.doggos.data.MyDoggoManager;
 import nyc.c4q.doggos.data.db.DoggoDbHelper;
 
-public class DoggosActivity extends AppCompatActivity implements DoggosContract.View {
+public class DoggosActivity extends AppCompatActivity {
 
     public static final String SELECTED_BREED_KEY = "selectedBreedKey";
     private static final int COLUMN_COUNT = 2;
 
-    private DoggosContract.Presenter presenter;
     private String breedName;
     private DoggosRecyclerViewAdapter adapter;
 
@@ -32,27 +33,31 @@ public class DoggosActivity extends AppCompatActivity implements DoggosContract.
         setTitle();
         setUpRecyclerView();
 
+        setUpViewModel();
+    }
+
+    private void setUpViewModel() {
         DoggoManager doggoManager = new MyDoggoManager(DoggoDbHelper.getInstance(this));
-        presenter = new DoggosPresenter(this, doggoManager);
+        DoggosViewModelFactory factory = new DoggosViewModelFactory(breedName, doggoManager);
 
-        // Tell the presenter the view is good to go!
-        presenter.start(breedName);
+        DoggosViewModel viewModel = ViewModelProviders.of(this, factory)
+                .get(DoggosViewModel.class);
+
+        viewModel.getDoggoImageUrls().observe(this, getObserver());
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        presenter.stop(); // Tell the presenter to stop holding onto a reference to this activity
-    }
-
-    @Override
-    public void displayDoggos(@NonNull List<String> doggoImageUrls) {
-        adapter.refreshDoggoImages(doggoImageUrls);
-    }
-
-    @Override
-    public void displayErrorMessage(@NonNull String errorMessage) {
-        Toast.makeText(DoggosActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+    private Observer<List<String>> getObserver() {
+        return new Observer<List<String>>() {
+            @Override
+            public void onChanged(@Nullable List<String> doggoImageUrls) {
+                if (doggoImageUrls == null) {
+                    Toast.makeText(DoggosActivity.this, R.string.error_msg_no_doggos,
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    adapter.refreshDoggoImages(doggoImageUrls);
+                }
+            }
+        };
     }
 
     private void getSelectedBreedName() {

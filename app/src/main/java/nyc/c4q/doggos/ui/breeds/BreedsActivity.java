@@ -1,7 +1,9 @@
 package nyc.c4q.doggos.ui.breeds;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,11 +16,10 @@ import nyc.c4q.doggos.data.DoggoManager;
 import nyc.c4q.doggos.data.MyDoggoManager;
 import nyc.c4q.doggos.data.db.DoggoDbHelper;
 
-public class BreedsActivity extends AppCompatActivity implements BreedsContract.View {
+public class BreedsActivity extends AppCompatActivity {
 
     private static final int COLUMN_COUNT = 3;
 
-    private BreedsContract.Presenter presenter;
     private BreedsRecyclerViewAdapter adapter;
 
     @Override
@@ -29,27 +30,31 @@ public class BreedsActivity extends AppCompatActivity implements BreedsContract.
         setTitle();
         setUpRecyclerView();
 
+        setUpViewModel();
+    }
+
+    private void setUpViewModel() {
         DoggoManager doggoManager = new MyDoggoManager(DoggoDbHelper.getInstance(this));
-        presenter = new BreedsPresenter(this, doggoManager);
+        BreedsViewModelFactory factory = new BreedsViewModelFactory(doggoManager);
 
-        // Tell the presenter the view is good to go!
-        presenter.start();
+        BreedsViewModel viewModel = ViewModelProviders.of(this, factory)
+                .get(BreedsViewModel.class);
+
+        viewModel.getBreedNamesLiveData().observe(this, getObserver());
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        presenter.stop(); // Tell the presenter to stop holding onto a reference to this activity
-    }
-
-    @Override
-    public void displayBreedNames(@NonNull List<String> breedNames) {
-        adapter.refreshBreedList(breedNames);
-    }
-
-    @Override
-    public void displayErrorMessage(@NonNull String errorMessage) {
-        Toast.makeText(BreedsActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+    private Observer<List<String>> getObserver() {
+        return new Observer<List<String>>() {
+            @Override
+            public void onChanged(@Nullable List<String> breedNames) {
+                if (breedNames == null) {
+                    Toast.makeText(BreedsActivity.this, R.string.error_msg_no_doggos,
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    adapter.refreshBreedList(breedNames);
+                }
+            }
+        };
     }
 
     private void setTitle() {
