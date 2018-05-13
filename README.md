@@ -2,10 +2,9 @@
 
 ### Branch: Version Three - Model-View-Presenter
 
-Problems from version two that have been solved:
-* Activities and `onCreate()` methods are even more concise and readable
-* Activities (a.k.a. views) are unaware of the data layer
+Problems from version three that have been solved:
+* ViewModel remains in memory on device rotation, so no need to re-do network call or database query each time!
+* No view/presenter contracts necessary
 
 Problems that remain in this version:
-* No way to keep data in memory on device rotation
-* View and presenter contracts may be considered cumbersome
+* Writing ViewModelFactories is a little cumbersome
